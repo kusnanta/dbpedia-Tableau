@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "# dependency\nlibrary(SPARQL)\nlibrary(ggplot2)\nlibrary(ggrepel)\nlibrary(plotly)\n\nendpoint <- \"http://localhost:3030/pi/query\"\nquery <-\n  \"\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\nPREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>\nPREFIX dbo: <http://dbpedia.org/ontology/>\nPREFIX dbp: <http://dbpedia.org/property/>\nPREFIX dbr: <http://dbpedia.org/resource/>\nPREFIX dbc: <http://dbpedia.org/resource/Category:>\nPREFIX owl: <http://www.w3.org/2002/07/owl#>\nPREFIX wil: <http://example.com/jumlahdanrasiodokterperawatterhadappuskesmas2015#>\nPREFIX wi: <http://purl.org/ontology/wi/core#>\nPREFIX db: <http://dbpedia.org/>\n\nSELECT ?name ?puskes ?doktergigi ?dokterumum ?perawat ?bidan ?lat ?long ?area ?pop\n{\n  ?temp a wil:wilayah .\n  ?temp owl:sameAs ?out .\n  ?temp wil:label ?name .\n  ?temp wil:jumlah_puskesmas ?puskes .\n  ?temp wil:dokter_umum_puskesmas ?dokterumum .\n  ?temp wil:dokter_gigi_puskesmas ?doktergigi .\n  ?temp wil:perawat_puskesmas ?perawat .\n  ?temp wil:bidan_puskesmas ?bidan .\n  SERVICE <http://dbpedia.org/sparql>\n  {SELECT * WHERE{\n  ?out dbo:populationTotal ?pop .\n  ?out dbp:areaTotalKm ?area .\n  ?out geo:lat ?lat .\n  ?out geo:long ?long .\n  }}\n}\n\"\n\n# query from sparql endpoint\nquedata <- SPARQL(endpoint,query)\n# parsing result\npuskesmas = quedata$results\ndf=puskesmas\npuskesmasMatrix=as.matrix(cbind(df$puskes, df$pop),ncol=2)\n\n# execute\nfit <- kmeans(puskesmasMatrix, 5)\npus <- ggplot(data=df, aes(x=pop, y=puskes, color = factor(fit$cluster), label= puskesmas$name)) + geom_point() \npus + geom_segment(aes(x = 0, y = 0, xend = 3600000, yend = 1200, colour = \"segment\"))\nggplotly(label= puskesmas$name)\n\n# from csv\n# puskesmas = read.csv(\"jumlahdanrasiodokterperawatterhadappuskesmas2015.csv\")\n# df=puskesmas\n# puskesmasMatrix=as.matrix(cbind(df$Jumlah_Puskesmas2015, df$Dokter_Umum_puskesmas2015, df$Dokter_Gigi_puskesmas2015, df$Perawat_puskesmas2015, df$Bidan_puskesmas2015, df$Rasio_dokter_umum, df$Rasio_dokter_gigi, df$Rasio_perawat, df$Rasio_bidan),ncol=9)\n\n# fit <- kmeans(puskesmasMatrix, 6)\n# ggplot(puskesmas, aes(Jumlah_Puskesmas2015,Dokter_Umum_puskesmas2015, label= puskesmas$Wilayah)) + geom_point() + geom_text()\n# ggplot(data=df, aes(x=Jumlah_Puskesmas2015, y=Dokter_Umum_puskesmas2015, color = factor(fit$cluster), label= puskesmas$Wilayah)) + geom_point() + geom_text_repel(aes(Jumlah_Puskesmas2015,Dokter_Umum_puskesmas2015, label= puskesmas$Wilayah))\n# pus <- ggplot(data=df, aes(x=Jumlah_Puskesmas2015, y=Dokter_Umum_puskesmas2015, color = factor(fit$cluster), label= puskesmas$Wilayah)) + geom_point() + geom_text_repel(aes(Jumlah_Puskesmas2015,Dokter_Umum_puskesmas2015, label= puskesmas$Wilayah)) + scale_color_manual(values = c(\"purple\", \"black\", \"blue\", \"green\", \"yellow\", \"gray\", \"red\" ))\n# pus + geom_segment(aes(x = 0, y = 0, xend = 1000, yend = 1000, colour = \"segment\"))\n\n# end of csv code",
+    "created" : 1482405464471.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "560733060",
+    "id" : "5401792",
+    "lastKnownWriteTime" : 1482406465,
+    "last_content_update" : 1482406465913,
+    "path" : "D:/Kuliah/Semester 7/Kecerdasan Bisnis A - Pak Rully/#Final Project/KCB/KCB.R",
+    "project_path" : "KCB.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
